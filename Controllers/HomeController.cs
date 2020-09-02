@@ -11,16 +11,16 @@ namespace SpiceyRecipeAPI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly SpiceyRecipeDAL _spiceyRecipeDAL;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+            _spiceyRecipeDAL = new SpiceyRecipeDAL();
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var recipeObj = await _spiceyRecipeDAL.GetRecipe();
+            return View(recipeObj);
         }
 
         public IActionResult Privacy()
