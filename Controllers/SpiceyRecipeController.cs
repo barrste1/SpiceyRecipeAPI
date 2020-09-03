@@ -17,6 +17,7 @@ namespace SpiceyRecipeAPI.Controllers
             _context = context;
         }
 
+        
         public IActionResult Index(string input)
         {
             // Get all the recipes from the API
@@ -46,6 +47,8 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 recipeWithFavInfo.Add(recipeFavoriteVM);
             }
+
+   
             return View(recipeWithFavInfo);
             //return View(resultList);
         }
@@ -75,9 +78,14 @@ namespace SpiceyRecipeAPI.Controllers
             return userFavoriteVM;
         }
 
-        public IActionResult AddToFavorites(Result result)
+        
+        public IActionResult AddToFavorites(RecipeFavoriteVM result)
         {
             Favorite newFavorite = new Favorite();
+
+            //List<RecipeFavoriteVM> tempdata = (List<RecipeFavoriteVM>)TempData["Results"];
+            //List<RecipeFavoriteVM> tempdata = TempData["Results"];
+            //var result = tempdata[index];
             newFavorite.Title = result.title;
             newFavorite.RecipeLink = result.href;
             newFavorite.Ingredients = result.ingredients;

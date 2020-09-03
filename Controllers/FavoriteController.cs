@@ -11,7 +11,7 @@ namespace SpiceyRecipeAPI.Controllers
     public class FavoriteController : Controller
     {
         private readonly SpiceyRecipeDBContext _context;
-        string loginUserId;
+        //string loginUserId;
 
         public FavoriteController(SpiceyRecipeDBContext context)
         {
