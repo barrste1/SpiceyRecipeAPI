@@ -59,7 +59,7 @@ namespace SpiceyRecipeAPI.Models
             for (int i = 0; i < data.Count; i++)
             {
                 recipeData = data[i];
-                recipepuppy = JsonConvert.DeserializeObject<Result>(recipeData["results"].ToString());
+                recipepuppy = JsonConvert.DeserializeObject<Result>(recipeData.ToString());
                 recipes.Add(recipepuppy);
             }
 

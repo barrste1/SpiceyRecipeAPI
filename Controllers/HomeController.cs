@@ -19,6 +19,7 @@ namespace SpiceyRecipeAPI.Controllers
         //}
         public IActionResult Index()
         {
+
             return View();
         }
 
