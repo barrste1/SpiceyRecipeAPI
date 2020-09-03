@@ -11,34 +11,43 @@ namespace SpiceyRecipeAPI.Controllers
     public class SpiceyRecipeController : Controller
     {
         private readonly SpiceyRecipeDBContext _context;
+        string loginUserId;
         public SpiceyRecipeController(SpiceyRecipeDBContext context)
         {
             _context = context;
         }
-        string loginUserId;
 
         public IActionResult Index(string input)
         {
+            // Get all the recipes from the API
             SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
-
-            List<Result> results = dl.GetRecipe(input);
-            List<RecipeFavoriteVM> displayList = new List<RecipeFavoriteVM>();
-            UserFavoriteVM favorites = GetFavorites();
-
-            for(int i =0; i < results.Count; i++)
+            List<Result> resultList = dl.GetRecipe(input);
+            // Get all the favorites from the db for the login user
+            UserFavoriteVM userFavoriteVM = GetFavorites();
+            // Build display list
+            List<RecipeFavoriteVM> recipeWithFavInfo = new List<RecipeFavoriteVM>();
+            foreach (Result item in resultList)
             {
-                displayList.Add(results[i]);
-                for(int j =0; j < favorites.favorites.Count; j++)
-                {
-                    if (results[i].title == favorites.favorites[j].Title)
-                    {
+                RecipeFavoriteVM recipeFavoriteVM = new RecipeFavoriteVM();
+                recipeFavoriteVM.title = item.title;
+                recipeFavoriteVM.href = item.href;
+                recipeFavoriteVM.ingredients = item.ingredients;
+                recipeFavoriteVM.thumbnail = item.thumbnail;
 
-                    }
+
+                Favorite fav = userFavoriteVM.favorites.Where(f => f.Title == item.title).FirstOrDefault();
+                if(fav != null)
+                {                    
+                    recipeFavoriteVM.isFavorite = true;                    
                 }
+                else
+                {
+                    recipeFavoriteVM.isFavorite = false;
+                }
+                recipeWithFavInfo.Add(recipeFavoriteVM);
             }
-
-
-            return View(displayList);
+            return View(recipeWithFavInfo);
+            //return View(resultList);
         }
 
         public UserFavoriteVM GetFavorites()
@@ -64,6 +73,21 @@ namespace SpiceyRecipeAPI.Controllers
             userFavoriteVM.UserId = loginUserId;
             userFavoriteVM.favorites = favorites;
             return userFavoriteVM;
+        }
+
+        public IActionResult AddToFavorites(Result result)
+        {
+            Favorite newFavorite = new Favorite();
+            newFavorite.Title = result.title;
+            newFavorite.RecipeLink = result.href;
+            newFavorite.Ingredients = result.ingredients;
+            newFavorite.Thumbnail = result.thumbnail;
+                        
+            _context.Favorite.Add(newFavorite);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+
         }
 
 

@@ -7,9 +7,9 @@
     <p></p>
 </body>
 </html>
-@model List<Result>
+@model List<RecipeFavoriteVM>
 
-@foreach (Result recipe in Model)
+@foreach (RecipeFavoriteVM recipe in Model)
 {
     @*<div class="p-3 mb-2 bg-gradient-secondary text-white">.bg-gradient-secondary</div>*@
     <table class="table table-hover table-info">
@@ -19,18 +19,26 @@
 
             <td>@recipe.title<br /></td>
 
-            <td><img src="@recipe.thumbnail" /></td>
-            <br />
+            <td><img src="@recipe.thumbnail" /><br /> </td>
+            
             <td><a>The ingredients are: </a>@recipe.ingredients</td>
             <td><a href="@recipe.href">Find the recipe here</a></td>
-            <br />
+          
             <td>
-                <button type="button" class="btn btn-warning"><a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton"><p><em>Add to favorites?</em></p></button>
-                <!--<div class="custom-control custom-checkbox">
-        <input type="checkbox" >
-        <label class="custom-control-label" for="defaultChecked2">Add to Favorites</label>
+                @if (recipe.isFavorite)
+                {
+                    <button type="button" class="btn btn-warning"><a href="../SpiceyRecipe/RemoveFavorites?result=recipe" type="submit" class="buton"><p><em>Remove favorite?</em></p></button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-warning"><a href="../SpiceyRecipe/AddToFavorites?result=recipe" type="submit" class="buton"><p><em>Add to favorites?</em></p></button>
+                }
 
-        Already a favorite? <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked name="Complete" value="true" />-->
+                <!--<div class="custom-control custom-checkbox">
+    <input type="checkbox" >
+    <label class="custom-control-label" for="defaultChecked2">Add to Favorites</label>
+
+    Already a favorite? <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked name="Complete" value="true" />-->
                 @*<input type="checkbox"class="custom-control-input" id="defaultChecked2" checked name="Complete" value="false" hidden />*@
 
                 <!--</div>-->
