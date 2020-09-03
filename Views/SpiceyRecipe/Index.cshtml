@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Search Results";
+}
+
+@model List<Result>
+
+@foreach (Result recipe in Model)
+{
+<p>@recipe.title</p><img src="@recipe.thumbnail"/>
+<p>@recipe.ingredients</p>
+<a href="@recipe.href">Find recipe here</a>
+<a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton">Add To Favorites</a>
+
+}

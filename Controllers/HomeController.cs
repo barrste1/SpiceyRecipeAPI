@@ -11,18 +11,15 @@ namespace SpiceyRecipeAPI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SpiceyRecipeDAL _spiceyRecipeDAL;
+        //private readonly SpiceyRecipeDAL _spiceyRecipeDAL;
 
-        public HomeController()
-        {
-            _spiceyRecipeDAL = new SpiceyRecipeDAL();
-        }
+        //public HomeController()
+        //{
+        //    _spiceyRecipeDAL = new SpiceyRecipeDAL();
+        //}
         public IActionResult Index()
         {
-            SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
-            var recipeObj = new RecipepuppyObject();
-            var recipeobj =  dl.GetRecipe();
-            return View(recipeobj);
+            return View();
         }
 
         public IActionResult Privacy()

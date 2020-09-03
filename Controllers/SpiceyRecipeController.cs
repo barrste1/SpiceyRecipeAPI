@@ -17,7 +17,10 @@ namespace SpiceyRecipeAPI.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
+            var recipeObj = new RecipepuppyObject();
+            var recipeobj = dl.GetRecipe();
+            return View(recipeObj);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SpiceyRecipeAPI.Models
         }
 
 
-        public RecipepuppyObject GetRecipe()
+        public List<Result> GetRecipe()
         {
             //var client = GetClient();
             //var response = await client.GetAsync("/?q=chicken");
@@ -49,11 +49,22 @@ namespace SpiceyRecipeAPI.Models
             //JObject wasn't recognized and need an install of a nuget package
             JObject json = JObject.Parse(recipeJson);
 
+            List<JToken> data = json["results"].ToList();
+            //RecipepuppyObject recipeObject = JsonConvert.DeserializeObject<RecipepuppyObject>(json.ToString());
 
-            RecipepuppyObject recipeObject = JsonConvert.DeserializeObject<RecipepuppyObject>(json.ToString());
-            //List<JToken> data = json["data"]["children"].ToList();
 
-            return recipeObject;
+            JToken recipeData;
+            Result recipepuppy = new Result();
+            List<Result> recipes = new List<Result>();
+            for (int i = 0; i < data.Count; i++)
+            {
+                recipeData = data[i];
+                recipepuppy = JsonConvert.DeserializeObject<Result>(recipeData["results"].ToString());
+                recipes.Add(recipepuppy);
+            }
+
+
+            return recipes;
 
 
         }
