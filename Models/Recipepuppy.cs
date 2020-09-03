@@ -19,7 +19,14 @@ namespace SpiceyRecipeAPI.Models
         public string href { get; set; }
         public string ingredients { get; set; }
         public string thumbnail { get; set; }
+        public Result() { }
+        public Result(string title, string href, string ingredients, string thumbnail)
+        {
+            this.title = title; this.href = href; this.ingredients = ingredients; this.thumbnail = thumbnail;
+        }
     }
 
-   
+
+
+
 }
