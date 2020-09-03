@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model RecipepuppyObject
+
+@*@Model.results[0].title
+<img src="@Model.results[0].thumbnail" />*@
+
+
+
+
+<form action="../SpiceyRecipe" method="post">
+    <input type="text" name="input" placeholder="Search Recipe" />
+    <input type="submit" name="Search"  />
+</form>
+
+
