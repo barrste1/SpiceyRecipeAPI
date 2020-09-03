@@ -15,11 +15,11 @@ namespace SpiceyRecipeAPI.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string input)
         {
             SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
 
-            var recipeobj = dl.GetRecipe();
+            var recipeobj = dl.GetRecipe(input);
             return View(recipeobj);
         }
     }

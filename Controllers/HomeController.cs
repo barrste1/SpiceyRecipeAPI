@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpiceyRecipeAPI.Models;
@@ -19,7 +20,17 @@ namespace SpiceyRecipeAPI.Controllers
         //}
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Search");
+            }
+            return View();
+        }
 
+        [Authorize]
+        public IActionResult Search()
+        {
+            
             return View();
         }
 

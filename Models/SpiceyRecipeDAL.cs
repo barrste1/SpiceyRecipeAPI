@@ -21,9 +21,9 @@ namespace SpiceyRecipeAPI.Models
         //    return client;
         //}
 
-        public string CallAPI()
+        public string CallAPI(string input)
         {   //sets up our request
-            HttpWebRequest request = WebRequest.CreateHttp($"http://www.recipepuppy.com/api/");
+            HttpWebRequest request = WebRequest.CreateHttp($"http://www.recipepuppy.com/api/?q={input}");
 
             //This sends us the response
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -36,13 +36,13 @@ namespace SpiceyRecipeAPI.Models
         }
 
 
-        public List<Result> GetRecipe()
+        public List<Result> GetRecipe(string input)
         {
             //var client = GetClient();
             //var response = await client.GetAsync("/?q=chicken");
             //RecipepuppyObject puppyObject = await response.Content.ReadAsAsync<RecipepuppyObject>();
 
-            string recipeJson = CallAPI();
+            string recipeJson = CallAPI(input);
 
             //Takes JSON data and puts into a JSON object --- a series of nested properties
             //Javascript has an advantage since JSON is simply a Javascript
