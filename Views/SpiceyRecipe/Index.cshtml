@@ -1,14 +1,48 @@
 ﻿@{
     ViewData["Title"] = "Search Results";
 }
-
+<html>
+<body style="background-color:teal;">
+    <h1 class="display-4">Here are your matching recipes!</h1>
+    <p></p>
+</body>
+</html>
 @model List<Result>
 
 @foreach (Result recipe in Model)
 {
-<p>@recipe.title</p><img src="@recipe.thumbnail"/>
-<p>@recipe.ingredients</p>
-<a href="@recipe.href">Find recipe here</a>
-<a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton">Add To Favorites</a>
+    @*<div class="p-3 mb-2 bg-gradient-secondary text-white">.bg-gradient-secondary</div>*@
+    <table class="table table-hover table-info">
+        <tr class="thead-dark">
+         
+            @*"d-table-row"*@
+
+            <td>@recipe.title<br /></td>
+
+            <td><img src="@recipe.thumbnail" /></td>
+            <br />
+            <td><a>The ingredients are: </a>@recipe.ingredients</td>
+            <td><a href="@recipe.href">Find the recipe here</a></td>
+            <br />
+            <td>
+                <button type="button" class="btn btn-warning"><a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton"><p><em>Add to favorites?</em></p></button>
+                <!--<div class="custom-control custom-checkbox">
+        <input type="checkbox" >
+        <label class="custom-control-label" for="defaultChecked2">Add to Favorites</label>
+
+        Already a favorite? <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked name="Complete" value="true" />-->
+                @*<input type="checkbox"class="custom-control-input" id="defaultChecked2" checked name="Complete" value="false" hidden />*@
+
+                <!--</div>-->
+            </td>
+
+
+
+        </tr>
+    </table>
+    @*<p></p><img src="@recipe.thumbnail"/>
+        <p>@recipe.ingredients</p>
+
+        <a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton">Add To Favorites</a>*@
 
 }
