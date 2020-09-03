@@ -1,18 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Index";
 }
 
-@model RecipepuppyObject
-
-@*@Model.results[0].title
-<img src="@Model.results[0].thumbnail" />*@
-
-
-
-
-<form action="" method="post">
-    <input type="text" name="Title" placeholder="Search Recipe" />
-    <input type="submit" name="Search"  />
-</form>
-
-
+<h1 class="text-center">Welcome to the Spicey Recipe Recipe Manager!</h1>
+<h3 class="text-center">Please Log in or register to season your palate!</h3>
+<br />
+<div class="text-center">
+    <a href="../Identity/Account/Register" class="btn-dark">Register</a> &nbsp;<a href="../Identity/Account/Login" class="btn-dark">Log In</a>
+</div>
