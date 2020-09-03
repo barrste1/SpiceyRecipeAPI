@@ -17,10 +17,12 @@ namespace SpiceyRecipeAPI.Controllers
         {
             _spiceyRecipeDAL = new SpiceyRecipeDAL();
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var recipeObj = await _spiceyRecipeDAL.GetRecipe();
-            return View(recipeObj);
+            SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
+            var recipeObj = new RecipepuppyObject();
+            var recipeobj =  dl.GetRecipe();
+            return View(recipeobj);
         }
 
         public IActionResult Privacy()
