@@ -22,8 +22,8 @@ namespace SpiceyRecipeAPI.Models
         //}
 
         public string CallAPI(string input)
-        {   //sets up our request
-            HttpWebRequest request = WebRequest.CreateHttp($"http://www.recipepuppy.com/api/?q={input}");
+        {   //sets up our request           q={input}
+            HttpWebRequest request = WebRequest.CreateHttp($"http://www.recipepuppy.com/api/?{input}");
 
             //This sends us the response
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();

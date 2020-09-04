@@ -15,13 +15,13 @@ namespace SpiceyRecipeAPI.Controllers
     {
         private readonly SpiceyRecipeDBContext _context;
         string loginUserId;
-        
+
         public SpiceyRecipeController(SpiceyRecipeDBContext context)
         {
             _context = context;
         }
 
-        
+
         public IActionResult Index(string input)
         {
             string inputJSON = JsonSerializer.Serialize(input);
@@ -34,7 +34,7 @@ namespace SpiceyRecipeAPI.Controllers
             UserFavoriteVM userFavoriteVM = GetFavorites();
             // Build display list
             List<RecipeFavoriteVM> recipeWithFavInfo = new List<RecipeFavoriteVM>();
-            
+
             foreach (Result item in resultList)
             {
                 RecipeFavoriteVM recipeFavoriteVM = new RecipeFavoriteVM();
@@ -45,9 +45,9 @@ namespace SpiceyRecipeAPI.Controllers
 
 
                 Favorite fav = userFavoriteVM.favorites.Where(f => f.Title == item.title).FirstOrDefault();
-                if(fav != null)
-                {                    
-                    recipeFavoriteVM.isFavorite = true;                    
+                if (fav != null)
+                {
+                    recipeFavoriteVM.isFavorite = true;
                 }
                 else
                 {
@@ -55,8 +55,8 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 recipeWithFavInfo.Add(recipeFavoriteVM);
             }
-            
-            
+
+
 
             return View(recipeWithFavInfo);
             //return View(resultList);
@@ -128,43 +128,83 @@ namespace SpiceyRecipeAPI.Controllers
 
                 }
             }
-
+            string originalSearchText = "";
             var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
-            string originalSearchText = JsonSerializer.Deserialize<string>(searchText);
-
-            //return RedirectToAction($"Index?input={originalSearchText}");
-            
-            return RedirectToAction("Index", new {input = originalSearchText});
-
-        }
-
-        public static string ConstructEndpoint(string input)
-        {
-            string output="";
-            string[] endpoints = input.Split('&');
-
-            foreach(string endpoint in endpoints)
+            if (searchText != null)
             {
-                if (endpoint.StartsWith('p'))
-                {
-
-                }
-                else if(endpoint.StartsWith('q'))
-                {
-
-                }
-                else if (endpoint.StartsWith('i'))
-                {
-
-                }
-                else
-                {
-
-                }
+                originalSearchText = JsonSerializer.Deserialize<string>(searchText);
+            }
+            else
+            {
 
             }
 
-            return output;
+
+            //return RedirectToAction($"Index?input={originalSearchText}");
+
+            return RedirectToAction("Index", new { input = originalSearchText });
+
+        }
+
+        public IActionResult ConstructEndpoint(string input)
+        {
+            string output = "q=" + input;
+
+            return RedirectToAction("Index", new { input = output });
+        }
+
+        //takes in a direction and pages right(char is equal to +) or left (char is equal to -)
+        public IActionResult Paginate(char direction)
+        {
+            int page = 0;
+            string originalSearchText = "";
+            var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
+            if (searchText != null)
+            {
+                originalSearchText = JsonSerializer.Deserialize<string>(searchText);
+            }
+            else
+            {
+
+            }
+            string output = "";
+            string[] endpoints = originalSearchText.Split('&');
+            foreach(string endpoint in endpoints)
+            {
+                if (endpoint.StartsWith("q="))
+                {
+                    output = endpoint;
+                }
+                else if (endpoint.StartsWith("p="))
+                {
+                    page = int.Parse(endpoint.Substring(2)); 
+                }
+
+                if (direction == '+')
+                {
+                    if (endpoint.StartsWith("p="))
+                    {
+                        output += "&p=" + (page+1);
+                    }
+                    else
+                    {
+                        output += "&p=1";
+                    }
+                }
+                else if (direction == '-')
+                {
+                    if (page == 1 || page == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        output += "&p=" + (page-1);
+                    }
+                }
+            }
+            
+            return RedirectToAction("Index", new { input = output });
         }
     }
 }
