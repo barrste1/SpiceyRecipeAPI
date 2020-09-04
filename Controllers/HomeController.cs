@@ -27,6 +27,12 @@ namespace SpiceyRecipeAPI.Controllers
             
             return View();
         }
+        [Authorize]
+        public IActionResult AdvancedSearch()
+        {
+
+            return View();
+        }
 
         public IActionResult Privacy()
         {

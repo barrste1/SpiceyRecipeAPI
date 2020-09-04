@@ -26,6 +26,7 @@ namespace SpiceyRecipeAPI.Controllers
 
         public IActionResult Index(string input,int searchPage)
         {
+            //Sets up session info for search 
             string inputJSON = JsonSerializer.Serialize(input);
             HttpContext.Session.SetString("SearchInput", inputJSON);
 
@@ -61,8 +62,8 @@ namespace SpiceyRecipeAPI.Controllers
             recipeWithFavInfo[0].page = searchPage;
 
             return View(recipeWithFavInfo);
-            //return View(resultList);
         }
+
 
         public UserFavoriteVM GetFavorites()
         {
@@ -89,7 +90,8 @@ namespace SpiceyRecipeAPI.Controllers
             return userFavoriteVM;
         }
 
-//This action takes a result from the API and converts it into a favorite for storing in the database
+        
+        //This action takes a result from the API and converts it into a favorite for storing in the database
         public IActionResult AddToFavorites(RecipeFavoriteVM result)
         {
             Favorite newFavorite = new Favorite();
@@ -147,19 +149,50 @@ namespace SpiceyRecipeAPI.Controllers
 
         //this action takes the user input and constructs an endpoint as used by Recipe Puppy API
         //This is used so that pagination can also be constructed later
-        public IActionResult ConstructEndpoint(string input)
+        public IActionResult ConstructEndpoint(AdvancedSearchModel advancedSearch)
         {
-            string output = "q=" + input;
+            string output = "q=" + advancedSearch.querry;
+            string ingredientConstruct = "";
+            string[] searchIngredients = { advancedSearch.ingredient1, advancedSearch.ingredient2, advancedSearch.ingredient3 };
+            foreach(string ingredient in searchIngredients)
+            {
+                if (ingredient == ""||ingredient==null)
+                {
+                    //if a search field is empty or null it won't be added to the endpoint.
+                    
+                }
+                
+                else
+                {
+                    ingredientConstruct += ($"{ingredient.Trim()},");
+                }
+
+            }
+
+            //&i= is only added to the endpoint if there are ingredient(s) in the search field(s)
+            if (ingredientConstruct != "")
+            {
+                output += $"&i={ingredientConstruct.Substring(0, (ingredientConstruct.Length - 1))}";
+            }
+
+           
 
             return RedirectToAction("Index", new { input = output, searchPage = 1 });
         }
 
+
         //takes in a direction and pages right(char is equal to +) or left (char is equal to -)
         public IActionResult Paginate(char direction)
         {
+            //Recipe Puppy API search results start on page 1, so page will be initialized to 1
             int page = 1;
             string originalSearchText = "";
+
+            #region Obtain Search string From session
+            /*Session stores the search querry so that the page can be advanced while keeping all other
+            search parameters the same*/
             var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
+
             if (searchText != null)
             {
                 originalSearchText = JsonSerializer.Deserialize<string>(searchText);
@@ -168,6 +201,10 @@ namespace SpiceyRecipeAPI.Controllers
             {
 
             }
+            #endregion
+
+            #region Endpoint Split
+            /*enpoints are split based on endpoint type, then reconstructed, so that page can be modified*/
             string output = "";
             string[] endpoints = originalSearchText.Split('&');
             foreach (string endpoint in endpoints)
@@ -176,13 +213,20 @@ namespace SpiceyRecipeAPI.Controllers
                 {
                     output = endpoint;
                 }
-                else if (endpoint.StartsWith("p="))
+                else if (endpoint.StartsWith("i="))
                 {
+                    output += $"&{endpoint}";
+                }
+                else if (endpoint.StartsWith("p="))
+                {   //substring p= takes up the first 2 characters of this endpoint area
                     page = int.Parse(endpoint.Substring(2));
                 }
 
-
             }
+            #endregion
+
+            #region Page Modification
+            //+ advances page (from next page) and - value come from previous page 
             if (direction == '+')
             {
                 try
@@ -191,6 +235,11 @@ namespace SpiceyRecipeAPI.Controllers
                     {
                         output += "&p=" + (page + 1);
                     }
+                    else if (endpoints[2].StartsWith("p="))
+                    {
+                        output += "&p=" + (page + 1); 
+                    }
+
                 }
                 catch
                 {
@@ -209,7 +258,11 @@ namespace SpiceyRecipeAPI.Controllers
                     output += "&p=" + (page - 1);
                 }
             }
+            #endregion
+
+
             return RedirectToAction("Index", new { input = output , searchPage = page});
         }
+
     }
 }

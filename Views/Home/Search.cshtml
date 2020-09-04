@@ -2,20 +2,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model RecipepuppyObject
-
-@*@Model.results[0].title
-<img src="@Model.results[0].thumbnail" />*@
 
     <body style="background-color:teal;">
         <h4>Looking for a recipe?</h4>
         <div class="text-lg-center">
 
             <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
-                <input type="text" name="input" placeholder="Search Recipe" /><br />
+                <input type="text" name="querry" placeholder="Search Recipe" /><br />
                 <input type="submit" name="Search" />
             </form>
-
+            <a href="../Home/AdvancedSearch" class="btn-danger">Search including Ingredients!</a>
         </div>
         <br />
         <h4>View saved favorite's</h4>

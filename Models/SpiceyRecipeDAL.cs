@@ -12,17 +12,9 @@ namespace SpiceyRecipeAPI.Models
 {
     public class SpiceyRecipeDAL
     {
-        //public HttpClient GetClient()
-        //{
-        //    HttpClient client = new HttpClient();
-        //    client.BaseAddress = new Uri("http://www.recipepuppy.com/api/");
-
-
-        //    return client;
-        //}
 
         public string CallAPI(string input)
-        {   //sets up our request           q={input}
+        {   //sets up our request           
             HttpWebRequest request = WebRequest.CreateHttp($"http://www.recipepuppy.com/api/?{input}");
 
             //This sends us the response
@@ -38,21 +30,13 @@ namespace SpiceyRecipeAPI.Models
 
         public List<Result> GetRecipe(string input)
         {
-            //var client = GetClient();
-            //var response = await client.GetAsync("/?q=chicken");
-            //RecipepuppyObject puppyObject = await response.Content.ReadAsAsync<RecipepuppyObject>();
 
             string recipeJson = CallAPI(input);
 
-            //Takes JSON data and puts into a JSON object --- a series of nested properties
-            //Javascript has an advantage since JSON is simply a Javascript
-            //JObject wasn't recognized and need an install of a nuget package
             JObject json = JObject.Parse(recipeJson);
 
             List<JToken> data = json["results"].ToList();
-            //RecipepuppyObject recipeObject = JsonConvert.DeserializeObject<RecipepuppyObject>(json.ToString());
-
-
+           
             JToken recipeData;
             Result recipepuppy = new Result();
             List<Result> recipes = new List<Result>();
