@@ -10,7 +10,7 @@
 @model List<RecipeFavoriteVM>
 
 <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
-    <label class="border">Search: </label><input type="text" name="input" placeholder="Something Spicier" />
+    <label class="border">Search:&nbsp;</label><input type="text" name="input" placeholder="Something Spicier" />
     <input type="submit" value="Spice it up!" />
 </form>
 
@@ -18,6 +18,9 @@
     Go to Favorites list
 </a>
 
+<a href="../Home/AdvancedSearch" class="btn btn-danger">
+    Search for specifc spiciness!
+</a>
 
 @for (int i = 0; i < Model.Count; i++)
 {
@@ -35,18 +38,7 @@
             <td><a href="@Model[i].href" target="_blank" rel="noopener noreferrer">Find the recipe here</a></td>
 
             <td>
-                @if (Model[i].isFavorite)
-                {
-                    @*<form action="../Favorite/DeleteFavorite" method="post">
-                            <input type="text" name="title" value="@Model[i].title" hidden />
-                            <input type="text" name="href" value="@Model[i].href" hidden />
-                            <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
-                            <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                            <input type="submit" class="btn-danger" value="Remove from Favorites" />
-                        </form>*@
-                    @*<a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>*@
-                }
-                else
+                @if (!Model[i].isFavorite)
                 {
                     <form action="../SpiceyRecipe/AddToFavorites" method="post">
                         <input type="text" name="title" value="@Model[i].title" hidden />
@@ -56,7 +48,6 @@
                         <input type="number" name="page" value="@Model[0].page" hidden />
                         <input type="submit" class="btn-success" value="Add To Favorites" />
                     </form>
-
                 }
 
             </td>

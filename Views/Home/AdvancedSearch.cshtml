@@ -5,18 +5,19 @@
 
 
 @model AdvancedSearchModel
-@*@Model.results[0].title
-    <img src="@Model.results[0].thumbnail" />*@
+
 
 <body style="background-color:teal;">
     <h4>Looking for a recipe?</h4>
-    <div class="text-lg-center">
+    <div class="text-lg-center" style="border-color:black">
 
         <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
-            Recipe: &nbsp; <input type="text" name="querry" placeholder="Search Recipe" /><br />
-            Ingredient 1: &nbsp; <input type="text" name="ingredient1" placeholder="Enter an Ingredient!" />
-            Ingredient 2: &nbsp; <input type="text" name="ingredient2" placeholder="Enter an Ingredient!" />
-            Ingredient 3: &nbsp;  <input type="text" name="ingredient3" placeholder="Enter an Ingredient!" /><input type="submit" name="Search" /><br />
+
+            <label>Recipe: &nbsp;</label>  <input type="text" name="querry" placeholder="Search Recipe"/><br />
+            <label>Ingredient 1: &nbsp;</label> <input type="text" name="ingredient1" placeholder="Enter an Ingredient!"/><br />
+            <lable>Ingredient 2: &nbsp;</lable> <input type="text" name="ingredient2" placeholder="Enter an Ingredient!"/><br />
+            <label>Ingredient 3: &nbsp;</label> <input type="text" name="ingredient3" placeholder="Enter an Ingredient!"/>
+            <input type="submit" name="Search" />
         </form>
 
     </div>

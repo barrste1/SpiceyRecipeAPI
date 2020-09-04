@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,30 +37,39 @@ namespace SpiceyRecipeAPI.Controllers
             // Build display list
             List<RecipeFavoriteVM> recipeWithFavInfo = new List<RecipeFavoriteVM>();
 
-            foreach (Result item in resultList)
+            //Helps catch a null result, either from an invalid ingredient or search result
+            if (resultList.Count == 0)
             {
-                RecipeFavoriteVM recipeFavoriteVM = new RecipeFavoriteVM();
-                recipeFavoriteVM.title = item.title;
-                recipeFavoriteVM.href = item.href;
-                recipeFavoriteVM.ingredients = item.ingredients;
-                recipeFavoriteVM.thumbnail = item.thumbnail;
+                return View("NoResult");
+            }
+            else
+            {
+                foreach (Result item in resultList)
+                {
+                    RecipeFavoriteVM recipeFavoriteVM = new RecipeFavoriteVM();
+                    recipeFavoriteVM.title = item.title;
+                    recipeFavoriteVM.href = item.href;
+                    recipeFavoriteVM.ingredients = item.ingredients;
+                    recipeFavoriteVM.thumbnail = item.thumbnail;
 
 
-                Favorite fav = userFavoriteVM.favorites.Where(f => f.Title == item.title).FirstOrDefault();
-                if (fav != null)
-                {
-                    recipeFavoriteVM.isFavorite = true;
+                    Favorite fav = userFavoriteVM.favorites.Where(f => f.Title == item.title).FirstOrDefault();
+                    if (fav != null)
+                    {
+                        recipeFavoriteVM.isFavorite = true;
+                    }
+                    else
+                    {
+                        recipeFavoriteVM.isFavorite = false;
+                    }
+                    recipeWithFavInfo.Add(recipeFavoriteVM);
                 }
-                else
-                {
-                    recipeFavoriteVM.isFavorite = false;
-                }
-                recipeWithFavInfo.Add(recipeFavoriteVM);
+
+                recipeWithFavInfo[0].page = searchPage;
+
+                return View(recipeWithFavInfo);
             }
 
-            recipeWithFavInfo[0].page = searchPage;
-
-            return View(recipeWithFavInfo);
         }
 
 
@@ -179,7 +187,6 @@ namespace SpiceyRecipeAPI.Controllers
 
             return RedirectToAction("Index", new { input = output, searchPage = 1 });
         }
-
 
         //takes in a direction and pages right(char is equal to +) or left (char is equal to -)
         public IActionResult Paginate(char direction)
