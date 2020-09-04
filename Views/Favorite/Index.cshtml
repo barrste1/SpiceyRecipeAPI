@@ -7,50 +7,26 @@
     <p></p>
 </body>
 </html>
-@model List<RecipeFavoriteVM>
+@model UserFavoriteVM
 <form action="../SpiceyRecipe/FavoriteList?result=@Model" method="post">
 
 
-    @for (int i = 0; i < Model.Count; i++)
+    @for (int i = 0; i < Model.favorites.Count; i++)
     {
        
         <table class="table table-hover table-info">
             <tr class="thead-dark">
+                
+                <td scope="col">"@Model.favorites[i].Title"<br /></td>
 
-                @*"d-table-row"*@
+                <td scope="col"><img src="@Model.favorites[i].Thumbnail" /><br /> </td>
 
-                <td scope="col">@Model[i].title<br /></td>
-
-                <td scope="col"><img src="@Model[i].thumbnail" /><br /> </td>
-
-                <td scope="col"><a>The ingredients are: </a>@Model[i].ingredients</td>
-                <td scope="col"><a href="@Model[i]recipe.href">Find the recipe here</a></td>
-
+                <td scope="col">The ingredients are: @Model.favorites[i].Ingredients</td>
+                <td scope="col"><a href="@Model.favorites[i].RecipeLink">Find the recipe here</a></td>
                 <td>
-                    @if (Model[i].isFavorite)
-                    {
-                        @*<form action="../SpiceyRecipe/RemoveFavorites" method="post">
-                                <input type="text" name="result" value="@Model[i]" hidden />
-                                <input type="submit" name="result" value="Remove from Favorites"/>
-                            </form>*@
-                        <a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>
-                    }
-                    <!--else
-                    {-->
-                        @*<form action="../SpiceyRecipe/AddToFavorites" method="post">
-                                <input type="text" name="result" value="@Model[i]" hidden />
-                                <input type="submit" name="result" value="Add To Favorites" />
-                            </form>
-                            <a href="../SpiceyRecipe/AddToFavorites?index=@i" class="btn-success">Add to favorites?</a>*@
-
-                        @*<input action="../SpiceyRecipe/AddToFavorites?result=@Model[i]" type="submit" name="result" value="Add To Favorites" />*@
-                    <!--}-->
-
-                 
+                        <a href="../Favorite/DeleteFavorite?favoriteid=@Model.favorites[i].Id" class="btn btn-danger">Delete favorite?</a>
                 </td>
-
             </tr>
         </table>
-
     }
 </form>
