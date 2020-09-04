@@ -243,6 +243,10 @@ namespace SpiceyRecipeAPI.Controllers
                 {   //substring p= takes up the first 2 characters of this endpoint area
                     page = int.Parse(endpoint.Substring(2));
                 }
+                else
+                {
+                    page = 2;
+                }
 
             }
             #endregion
@@ -265,7 +269,6 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 catch
                 {
-                    page = 2;
                     output += "&p=2";
                 };
             }

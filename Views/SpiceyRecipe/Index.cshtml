@@ -78,16 +78,15 @@
             {
                 <form action="../SpiceyRecipe/Paginate" method="post">
                     <input type="text" name="direction" value="-" hidden />
-                    <input type="submit" value="Previous Page" />
+                    <input type="submit" value="<-- Previous Page" />
                 </form>
-                <p>Page @Model[0].page</p>
                 <form action="../SpiceyRecipe/Paginate" method="post">
                     <input type="text" name="direction" value="+" hidden />
-                    <input type="submit" value="Next Page" />
+                    <input type="submit" value="Next Page -->" />
                 </form>
             }
 
-        }
+        
 </div>
 
 
