@@ -138,6 +138,33 @@ namespace SpiceyRecipeAPI.Controllers
 
         }
 
+        public static string ConstructEndpoint(string input)
+        {
+            string output="";
+            string[] endpoints = input.Split('&');
 
+            foreach(string endpoint in endpoints)
+            {
+                if (endpoint.StartsWith('p'))
+                {
+
+                }
+                else if(endpoint.StartsWith('q'))
+                {
+
+                }
+                else if (endpoint.StartsWith('i'))
+                {
+
+                }
+                else
+                {
+
+                }
+
+            }
+
+            return output;
+        }
     }
 }

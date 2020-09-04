@@ -10,7 +10,12 @@
 @model List<RecipeFavoriteVM>
 @*../SpiceyRecipe/AddToFavorites?result=@Model*@
 @*<form action="" method="post">*@
+<form action="" method="post">
+  <label class="border">Search: </label><input type="text" name="" placeholder="Something Spicier" />
+            <input type="submit" value="Spice it up!" />
 
+
+</form>
 
     @for (int i = 0; i < Model.Count; i++)@*(RecipeFavoriteVM recipe in Model)*@
     {
@@ -30,7 +35,7 @@
                 <td>
                     @if (Model[i].isFavorite)
                     {
-                    <form action="../SpiceyRecipe/RemoveFavorites" method="post">
+                    <form action="../Favorite/RemoveFavorite" method="post">
                         <input type="text" name="title" value="@Model[i].title" hidden />
                         <input type="text" name="href" value="@Model[i].href" hidden />
                         <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
@@ -72,4 +77,5 @@
             <a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton">Add To Favorites</a>*@
 
     }
+
 @*</form>*@

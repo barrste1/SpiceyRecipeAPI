@@ -8,6 +8,7 @@ namespace SpiceyRecipeAPI.Models
     public class RecipeFavoriteVM : Result
     {
         public bool isFavorite { get; set; }
+        public int page { get; set; }
 
         public RecipeFavoriteVM() { }
         public RecipeFavoriteVM(string title, string href, string ingredients, string thumbnail) :base(title,href,ingredients,thumbnail)
