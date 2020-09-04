@@ -26,12 +26,12 @@
     @for (int i = 0; i < Model.favorites.Count; i++)
     {
 
-        <table class="table table-hover table-info">
+        <table class="table table-hover table-info" style="table-layout:fixed">
             <tr class="thead-dark">
 
                 <td scope="col">"@Model.favorites[i].Title"<br /></td>
 
-                <td scope="col"><img src="@Model.favorites[i].Thumbnail" /><br /> </td>
+                <td scope="col"><img src="@Model.favorites[i].Thumbnail" style="width:100px;height:100px"/><br /> </td>
 
                 <td scope="col">The ingredients are: @Model.favorites[i].Ingredients</td>
                 <td scope="col"><a href="@Model.favorites[i].RecipeLink" target="_blank" rel="noopener noreferrer">Find the recipe here</a></td>

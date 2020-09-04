@@ -25,14 +25,14 @@
 @for (int i = 0; i < Model.Count; i++)
 {
 
-    <table class="table table-hover table-info">
+    <table class="table table-hover table-info" style="table-layout:fixed">
         <tr class="thead-dark">
 
 
 
             <td>@Model[i].title<br /></td>
 
-            <td><img src="@Model[i].thumbnail" /><br /> </td>
+            <td><img src="@Model[i].thumbnail" style="width:100px;height:100px"/><br /> </td>
 
             <td><a>The ingredients are: </a>@Model[i].ingredients</td>
             <td><a href="@Model[i].href" target="_blank" rel="noopener noreferrer">Find the recipe here</a></td>

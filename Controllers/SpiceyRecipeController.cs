@@ -210,10 +210,20 @@ namespace SpiceyRecipeAPI.Controllers
             }
             #endregion
 
+            string[] endpoints = { };
+
             #region Endpoint Split
             /*enpoints are split based on endpoint type, then reconstructed, so that page can be modified*/
             string output = "";
-            string[] endpoints = originalSearchText.Split('&');
+            try
+            {
+                 endpoints = originalSearchText.Split('&');
+            }
+            catch
+            {
+                 endpoints[0] = originalSearchText;
+            };
+
             foreach (string endpoint in endpoints)
             {
                 if (endpoint.StartsWith("q="))
