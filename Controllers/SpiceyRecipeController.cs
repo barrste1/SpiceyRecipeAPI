@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SpiceyRecipeAPI.Models;
 
 namespace SpiceyRecipeAPI.Controllers
@@ -12,6 +15,7 @@ namespace SpiceyRecipeAPI.Controllers
     {
         private readonly SpiceyRecipeDBContext _context;
         string loginUserId;
+        
         public SpiceyRecipeController(SpiceyRecipeDBContext context)
         {
             _context = context;
@@ -20,6 +24,9 @@ namespace SpiceyRecipeAPI.Controllers
         
         public IActionResult Index(string input)
         {
+            string inputJSON = JsonSerializer.Serialize(input);
+            HttpContext.Session.SetString("SearchInput", inputJSON);
+
             // Get all the recipes from the API
             SpiceyRecipeDAL dl = new SpiceyRecipeDAL();
             List<Result> resultList = dl.GetRecipe(input);
@@ -27,6 +34,7 @@ namespace SpiceyRecipeAPI.Controllers
             UserFavoriteVM userFavoriteVM = GetFavorites();
             // Build display list
             List<RecipeFavoriteVM> recipeWithFavInfo = new List<RecipeFavoriteVM>();
+            
             foreach (Result item in resultList)
             {
                 RecipeFavoriteVM recipeFavoriteVM = new RecipeFavoriteVM();
@@ -47,8 +55,9 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 recipeWithFavInfo.Add(recipeFavoriteVM);
             }
+            
+            
 
-   
             return View(recipeWithFavInfo);
             //return View(resultList);
         }
@@ -78,10 +87,16 @@ namespace SpiceyRecipeAPI.Controllers
             return userFavoriteVM;
         }
 
-        
-        public IActionResult AddToFavorites(RecipeFavoriteVM result)
+        //public IActionResult AddToFavorites(RecipeFavoriteVM result)
+        public IActionResult AddToFavorites(Result result)
         {
             Favorite newFavorite = new Favorite();
+
+            //string recipeWithFavInfoJSON = HttpContext.Session.GetString("RecipeWithFavInfo") ?? "EmptySession";
+            //recipeWithFavInfoList = JsonSerializer.Serialize(recipeWithFavInfoJSON);
+            //favMovieList = JsonSerializer.Deserialize<List<Movie>>(myList);
+
+
 
             //List<RecipeFavoriteVM> tempdata = (List<RecipeFavoriteVM>)TempData["Results"];
             //List<RecipeFavoriteVM> tempdata = TempData["Results"];
@@ -90,11 +105,36 @@ namespace SpiceyRecipeAPI.Controllers
             newFavorite.RecipeLink = result.href;
             newFavorite.Ingredients = result.ingredients;
             newFavorite.Thumbnail = result.thumbnail;
-                        
-            _context.Favorite.Add(newFavorite);
-            _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            using (_context)
+            {
+                _context.Favorite.Add(newFavorite);
+
+                try
+                {
+                    int noOfRows = _context.SaveChanges();
+                    if (noOfRows > 0)
+                    {
+                        UsersFavorite usersFavorite = new UsersFavorite();
+                        loginUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                        usersFavorite.UserId = loginUserId;
+                        usersFavorite.FavoriteId = newFavorite.Id;
+                        _context.UsersFavorite.Add(usersFavorite);
+                        _context.SaveChanges();
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+
+                }
+            }
+
+            var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
+            string originalSearchText = JsonSerializer.Deserialize<string>(searchText);
+
+            //return RedirectToAction($"Index?input={originalSearchText}");
+            
+            return RedirectToAction("Index", new {input = originalSearchText});
 
         }
 

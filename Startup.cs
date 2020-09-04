@@ -37,6 +37,14 @@ namespace SpiceyRecipeAPI
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(2);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +68,8 @@ namespace SpiceyRecipeAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
+
 
             app.UseEndpoints(endpoints =>
             {
