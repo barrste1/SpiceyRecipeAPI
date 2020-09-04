@@ -10,12 +10,15 @@
 @model List<RecipeFavoriteVM>
 @*../SpiceyRecipe/AddToFavorites?result=@Model*@
 @*<form action="" method="post">*@
-<form action="" method="post">
-  <label class="border">Search: </label><input type="text" name="" placeholder="Something Spicier" />
-            <input type="submit" value="Spice it up!" />
+<form action="../SpiceyRecipe/ConstructEndpoint" method="post">
+    <label class="border">Search: </label><input type="text" name="input" placeholder="Something Spicier" />
+    <input type="submit" value="Spice it up!" />
+    </form>
 
+    <a href="../Favorite/Index" class="btn btn-success">
+        Go to Favorites list
+    </a>
 
-</form>
 
     @for (int i = 0; i < Model.Count; i++)@*(RecipeFavoriteVM recipe in Model)*@
     {
@@ -35,13 +38,13 @@
                 <td>
                     @if (Model[i].isFavorite)
                     {
-                    <form action="../Favorite/RemoveFavorite" method="post">
-                        <input type="text" name="title" value="@Model[i].title" hidden />
-                        <input type="text" name="href" value="@Model[i].href" hidden />
-                        <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
-                        <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                        <input type="submit" class="btn-danger" value="Remove from Favorites" />
-                    </form>
+                        @*<form action="../Favorite/DeleteFavorite" method="post">
+                                <input type="text" name="title" value="@Model[i].title" hidden />
+                                <input type="text" name="href" value="@Model[i].href" hidden />
+                                <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
+                                <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
+                                <input type="submit" class="btn-danger" value="Remove from Favorites" />
+                            </form>*@
                         @*<a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>*@
                     }
                     else
@@ -78,4 +81,4 @@
 
     }
 
-@*</form>*@
+    @*</form>*@

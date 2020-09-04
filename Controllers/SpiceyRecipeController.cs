@@ -4,13 +4,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpiceyRecipeAPI.Models;
 
 namespace SpiceyRecipeAPI.Controllers
-{
+{   [Authorize]
     public class SpiceyRecipeController : Controller
     {
         private readonly SpiceyRecipeDBContext _context;
@@ -92,15 +93,6 @@ namespace SpiceyRecipeAPI.Controllers
         {
             Favorite newFavorite = new Favorite();
 
-            //string recipeWithFavInfoJSON = HttpContext.Session.GetString("RecipeWithFavInfo") ?? "EmptySession";
-            //recipeWithFavInfoList = JsonSerializer.Serialize(recipeWithFavInfoJSON);
-            //favMovieList = JsonSerializer.Deserialize<List<Movie>>(myList);
-
-
-
-            //List<RecipeFavoriteVM> tempdata = (List<RecipeFavoriteVM>)TempData["Results"];
-            //List<RecipeFavoriteVM> tempdata = TempData["Results"];
-            //var result = tempdata[index];
             newFavorite.Title = result.title;
             newFavorite.RecipeLink = result.href;
             newFavorite.Ingredients = result.ingredients;
@@ -139,8 +131,6 @@ namespace SpiceyRecipeAPI.Controllers
 
             }
 
-
-            //return RedirectToAction($"Index?input={originalSearchText}");
 
             return RedirectToAction("Index", new { input = originalSearchText });
 

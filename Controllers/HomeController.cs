@@ -12,12 +12,6 @@ namespace SpiceyRecipeAPI.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly SpiceyRecipeDAL _spiceyRecipeDAL;
-
-        //public HomeController()
-        //{
-        //    _spiceyRecipeDAL = new SpiceyRecipeDAL();
-        //}
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)

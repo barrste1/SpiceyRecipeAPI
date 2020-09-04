@@ -8,15 +8,18 @@
 <img src="@Model.results[0].thumbnail" />*@
 
 
-
+<h4>Looking for a recipe?</h4>
     <div class="text-lg-center">
+
         <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
             <input type="text" name="input" placeholder="Search Recipe" /><br />
-            <input type="submit" name="Search" />  &nbsp; <a href="../Favorites">Favorites</a>
-           
+            <input type="submit" name="Search" />
         </form>
 
     </div>
+<br />
+<h4>View saved favorite's</h4>
+<a href="../Favorite/Index" class="btn btn-success">Favorites</a>
 
 
 
