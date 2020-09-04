@@ -49,6 +49,10 @@
                         <input type="submit" class="btn-success" value="Add To Favorites" />
                     </form>
                 }
+                else
+                {
+                    <a href="../Favorite/Index">This is already a favorite! Click here to go to see all of them!</a>
+                }
 
             </td>
 
@@ -59,10 +63,9 @@
 }
 
 <div class="float-right">
-    @try
-    {
+
        
-            if (Model[0].page == 1 || Model[0].page == 0)
+            @if (Model[0].page == 1 || Model[0].page == 0)
             {
                 <p>Page 1</p>
                 <form action="../SpiceyRecipe/Paginate" method="post">
@@ -84,10 +87,6 @@
             }
 
         }
-    catch
-    {
-
-    }
 </div>
 
 

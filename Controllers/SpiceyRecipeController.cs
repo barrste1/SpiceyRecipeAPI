@@ -160,6 +160,9 @@ namespace SpiceyRecipeAPI.Controllers
         public IActionResult ConstructEndpoint(AdvancedSearchModel advancedSearch)
         {
             string output = "q=" + advancedSearch.querry;
+
+            /*ingredientConstruct is for weeding out blank entries for the ingredient parameter. 
+            it will construct the endpoint for ingredients in Recipe Puppy's preferrec format*/
             string ingredientConstruct = "";
             string[] searchIngredients = { advancedSearch.ingredient1, advancedSearch.ingredient2, advancedSearch.ingredient3 };
             foreach(string ingredient in searchIngredients)
@@ -172,6 +175,8 @@ namespace SpiceyRecipeAPI.Controllers
                 
                 else
                 {
+                    /*comma is added in case of additional ingredient requests. The string will end with a comma, which 
+                    will be removed via a substring on line 188-ish*/
                     ingredientConstruct += ($"{ingredient.Trim()},");
                 }
 
