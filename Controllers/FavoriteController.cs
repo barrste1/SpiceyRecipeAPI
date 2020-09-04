@@ -11,16 +11,45 @@ namespace SpiceyRecipeAPI.Controllers
     public class FavoriteController : Controller
     {
         private readonly SpiceyRecipeDBContext _context;
-        //string loginUserId;
+        string loginUserId;
 
         public FavoriteController(SpiceyRecipeDBContext context)
         {
+            
             _context = context;
         }
         public IActionResult Index()
-        {            
-            return View();
+        {
+            loginUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // get all the favorite recipes of the logged in user
+            List<UsersFavorite> userFavList = _context.UsersFavorite.ToList().Where(uf => uf.UserId == loginUserId).ToList();
+
+
+        
+            return View(userFavList);
         }
+
+      
+        public IActionResult DeleteFavorite(int favoriteid, string userid)
+        {
+            var foundFavorite = _context.Favorite.Find(userid);
+            if(foundFavorite != null)
+            {
+                _context.Favorite.Remove(foundFavorite);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+        //public IActionResult SeeFavoritesByUser(int id)
+        //{
+        //    List<Favorite> favorites = _context.Favorite.Where(x => x.Id == id).ToList();
+        //    Favorite favorite = _context.Favorite.Find(id);
+        //    RecipeFavoriteVM userFavorites = new RecipeFavoriteVM(id);
+
+        //    return View(userFavorites);
+        //}
 
         //public UserFavoriteVM GetFavorites()
         //{

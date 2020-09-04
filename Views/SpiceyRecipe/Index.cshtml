@@ -35,7 +35,7 @@
                         <input type="text" name="href" value="@Model[i].href" hidden />
                         <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
                         <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                        <input type="submit" value="Remove from Favorites" />
+                        <input type="submit" class="btn-danger" value="Remove from Favorites" />
                     </form>
                         @*<a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>*@
                     }
@@ -46,7 +46,7 @@
                             <input type="text" name="href" value="@Model[i].href" hidden />
                             <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
                             <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                            <input type="submit" value="Add To Favorites" />
+                            <input type="submit" class="btn-success" value="Add To Favorites" />
                         </form>
                         @*<input action="../SpiceyRecipe/AddToFavorites?index=@i" type="submit" name="result" value="Add To Favorites" />*@
                     }

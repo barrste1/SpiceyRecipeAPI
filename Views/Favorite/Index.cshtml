@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Favorite Results";
+}
+<html>
+<body style="background-color:teal;">
+    <h1 class="display-4">Here are your favorites!</h1>
+    <p></p>
+</body>
+</html>
+@model List<RecipeFavoriteVM>
+<form action="../SpiceyRecipe/FavoriteList?result=@Model" method="post">
+
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+       
+        <table class="table table-hover table-info">
+            <tr class="thead-dark">
+
+                @*"d-table-row"*@
+
+                <td scope="col">@Model[i].title<br /></td>
+
+                <td scope="col"><img src="@Model[i].thumbnail" /><br /> </td>
+
+                <td scope="col"><a>The ingredients are: </a>@Model[i].ingredients</td>
+                <td scope="col"><a href="@Model[i]recipe.href">Find the recipe here</a></td>
+
+                <td>
+                    @if (Model[i].isFavorite)
+                    {
+                        @*<form action="../SpiceyRecipe/RemoveFavorites" method="post">
+                                <input type="text" name="result" value="@Model[i]" hidden />
+                                <input type="submit" name="result" value="Remove from Favorites"/>
+                            </form>*@
+                        <a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>
+                    }
+                    <!--else
+                    {-->
+                        @*<form action="../SpiceyRecipe/AddToFavorites" method="post">
+                                <input type="text" name="result" value="@Model[i]" hidden />
+                                <input type="submit" name="result" value="Add To Favorites" />
+                            </form>
+                            <a href="../SpiceyRecipe/AddToFavorites?index=@i" class="btn-success">Add to favorites?</a>*@
+
+                        @*<input action="../SpiceyRecipe/AddToFavorites?result=@Model[i]" type="submit" name="result" value="Add To Favorites" />*@
+                    <!--}-->
+
+                 
+                </td>
+
+            </tr>
+        </table>
+
+    }
+</form>
