@@ -4,18 +4,24 @@
 
 
     <body style="background-color:teal;">
-        <h4>Looking for a recipe?</h4>
-        <div class="text-lg-center">
+        <h2 style="text-align">Looking for a recipe?</h2> 
+        <div class="text-lg">
 
-            <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
+            <form action="../SpiceyRecipe/ConstructEndpoint" style="float" method="post">
                 <input type="text" name="querry" placeholder="Search Recipe" /><br />
-                <input type="submit" name="Search" />
+                <input type="submit" value="Search" /><br>
+                <a href="../Home/AdvancedSearch" style="float" class="btn btn-danger">Search including Ingredients!</a><br />
+                <br />
             </form>
-            <a href="../Home/AdvancedSearch" class="btn-danger">Search including Ingredients!</a>
+
         </div>
         <br />
-        <h4>View saved favorite's</h4>
-        <a href="../Favorite/Index" class="btn btn-success">Favorites</a>
+        <h2 style="text-align">View saved favorite's</h2>
+        <div class="text-lg">
+
+            <a href="../Favorite/Index" style="float" class="btn btn-success">Favorites</a>
+        </div>
+        
 
 
 
