@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using SpiceyRecipeAPI.Models;
 
 namespace SpiceyRecipeAPI.Controllers
-{   [Authorize]
+{
+    [Authorize]
     public class SpiceyRecipeController : Controller
     {
         private readonly SpiceyRecipeDBContext _context;
@@ -23,7 +24,7 @@ namespace SpiceyRecipeAPI.Controllers
         }
 
 
-        public IActionResult Index(string input)
+        public IActionResult Index(string input,int searchPage)
         {
             string inputJSON = JsonSerializer.Serialize(input);
             HttpContext.Session.SetString("SearchInput", inputJSON);
@@ -57,7 +58,7 @@ namespace SpiceyRecipeAPI.Controllers
                 recipeWithFavInfo.Add(recipeFavoriteVM);
             }
 
-
+            recipeWithFavInfo[0].page = searchPage;
 
             return View(recipeWithFavInfo);
             //return View(resultList);
@@ -88,11 +89,12 @@ namespace SpiceyRecipeAPI.Controllers
             return userFavoriteVM;
         }
 
-        //public IActionResult AddToFavorites(RecipeFavoriteVM result)
-        public IActionResult AddToFavorites(Result result)
+//This action takes a result from the API and converts it into a favorite for storing in the database
+        public IActionResult AddToFavorites(RecipeFavoriteVM result)
         {
             Favorite newFavorite = new Favorite();
 
+            //properties are largely the same, making conversion simple
             newFavorite.Title = result.title;
             newFavorite.RecipeLink = result.href;
             newFavorite.Ingredients = result.ingredients;
@@ -102,10 +104,13 @@ namespace SpiceyRecipeAPI.Controllers
             {
                 _context.Favorite.Add(newFavorite);
 
+                /*this code is meant to prevent duplicate entries from being added to the table. as SaveChanges() resolves
+                To an int (the number of rows modified, if evaluation is higher than 0 it will proceed to save.*/
                 try
                 {
-                    int noOfRows = _context.SaveChanges();
-                    if (noOfRows > 0)
+                   
+                    int numberOfUsersFavoriteRows = _context.SaveChanges();
+                    if (numberOfUsersFavoriteRows > 0)
                     {
                         UsersFavorite usersFavorite = new UsersFavorite();
                         loginUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -117,36 +122,42 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 catch (DbUpdateException ex)
                 {
-
+                    //All code is thrown in a try catch as .SaveChanges() can throw many errors if it is not being saved.
                 }
             }
+
+            /*The session string is called in order to save the search string of the user, allowing the 
+            search results page to reload seamlessly after a result is added to favorites */
             string originalSearchText = "";
             var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
             if (searchText != null)
             {
+               
                 originalSearchText = JsonSerializer.Deserialize<string>(searchText);
             }
             else
             {
-
+                //If the user enters a blank search entry this prevents the program from crashing
             }
 
 
-            return RedirectToAction("Index", new { input = originalSearchText });
+            return RedirectToAction("Index", new { input = originalSearchText, searchPage = result.page });
 
         }
 
+        //this action takes the user input and constructs an endpoint as used by Recipe Puppy API
+        //This is used so that pagination can also be constructed later
         public IActionResult ConstructEndpoint(string input)
         {
             string output = "q=" + input;
 
-            return RedirectToAction("Index", new { input = output });
+            return RedirectToAction("Index", new { input = output, searchPage = 1 });
         }
 
         //takes in a direction and pages right(char is equal to +) or left (char is equal to -)
         public IActionResult Paginate(char direction)
         {
-            int page = 0;
+            int page = 1;
             string originalSearchText = "";
             var searchText = HttpContext.Session.GetString("SearchInput") ?? "EmptySession";
             if (searchText != null)
@@ -159,7 +170,7 @@ namespace SpiceyRecipeAPI.Controllers
             }
             string output = "";
             string[] endpoints = originalSearchText.Split('&');
-            foreach(string endpoint in endpoints)
+            foreach (string endpoint in endpoints)
             {
                 if (endpoint.StartsWith("q="))
                 {
@@ -167,34 +178,38 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 else if (endpoint.StartsWith("p="))
                 {
-                    page = int.Parse(endpoint.Substring(2)); 
+                    page = int.Parse(endpoint.Substring(2));
                 }
 
-                if (direction == '+')
+
+            }
+            if (direction == '+')
+            {
+                try
                 {
-                    if (endpoint.StartsWith("p="))
+                    if (endpoints[1].StartsWith("p="))
                     {
-                        output += "&p=" + (page+1);
-                    }
-                    else
-                    {
-                        output += "&p=1";
+                        output += "&p=" + (page + 1);
                     }
                 }
-                else if (direction == '-')
+                catch
                 {
-                    if (page == 1 || page == 0)
-                    {
+                    page = 2;
+                    output += "&p=2";
+                };
+            }
+            else if (direction == '-')
+            {
+                if (page == 1 || page == 0)
+                {
 
-                    }
-                    else
-                    {
-                        output += "&p=" + (page-1);
-                    }
+                }
+                else
+                {
+                    output += "&p=" + (page - 1);
                 }
             }
-            
-            return RedirectToAction("Index", new { input = output });
+            return RedirectToAction("Index", new { input = output , searchPage = page});
         }
     }
 }

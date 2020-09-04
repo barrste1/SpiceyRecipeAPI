@@ -8,77 +8,95 @@
 </body>
 </html>
 @model List<RecipeFavoriteVM>
-@*../SpiceyRecipe/AddToFavorites?result=@Model*@
-@*<form action="" method="post">*@
+
 <form action="../SpiceyRecipe/ConstructEndpoint" method="post">
     <label class="border">Search: </label><input type="text" name="input" placeholder="Something Spicier" />
     <input type="submit" value="Spice it up!" />
-    </form>
+</form>
 
-    <a href="../Favorite/Index" class="btn btn-success">
-        Go to Favorites list
-    </a>
+<a href="../Favorite/Index" class="btn btn-success">
+    Go to Favorites list
+</a>
 
 
-    @for (int i = 0; i < Model.Count; i++)@*(RecipeFavoriteVM recipe in Model)*@
-    {
-        @*<div class="p-3 mb-2 bg-gradient-secondary text-white">.bg-gradient-secondary</div>*@
-        <table class="table table-hover table-info">
-            <tr class="thead-dark">
+@for (int i = 0; i < Model.Count; i++)
+{
 
-                @*"d-table-row"*@
+    <table class="table table-hover table-info">
+        <tr class="thead-dark">
 
-                <td>@Model[i].title<br /></td>
 
-                <td><img src="@Model[i].thumbnail" /><br /> </td>
 
-                <td><a>The ingredients are: </a>@Model[i].ingredients</td>
-                <td><a href="@Model[i]recipe.href">Find the recipe here</a></td>
+            <td>@Model[i].title<br /></td>
 
-                <td>
-                    @if (Model[i].isFavorite)
-                    {
-                        @*<form action="../Favorite/DeleteFavorite" method="post">
-                                <input type="text" name="title" value="@Model[i].title" hidden />
-                                <input type="text" name="href" value="@Model[i].href" hidden />
-                                <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
-                                <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                                <input type="submit" class="btn-danger" value="Remove from Favorites" />
-                            </form>*@
-                        @*<a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>*@
-                    }
-                    else
-                    {
-                        <form action="../SpiceyRecipe/AddToFavorites" method="post">
+            <td><img src="@Model[i].thumbnail" /><br /> </td>
+
+            <td><a>The ingredients are: </a>@Model[i].ingredients</td>
+            <td><a href="@Model[i].href" target="_blank" rel="noopener noreferrer">Find the recipe here</a></td>
+
+            <td>
+                @if (Model[i].isFavorite)
+                {
+                    @*<form action="../Favorite/DeleteFavorite" method="post">
                             <input type="text" name="title" value="@Model[i].title" hidden />
                             <input type="text" name="href" value="@Model[i].href" hidden />
                             <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
                             <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
-                            <input type="submit" class="btn-success" value="Add To Favorites" />
-                        </form>
-                        @*<input action="../SpiceyRecipe/AddToFavorites?index=@i" type="submit" name="result" value="Add To Favorites" />*@
-                    }
+                            <input type="submit" class="btn-danger" value="Remove from Favorites" />
+                        </form>*@
+                    @*<a href="../SpiceyRecipe/RemoveFavorites?index=@i" class="btn-danger">Remove favorite?</a>*@
+                }
+                else
+                {
+                    <form action="../SpiceyRecipe/AddToFavorites" method="post">
+                        <input type="text" name="title" value="@Model[i].title" hidden />
+                        <input type="text" name="href" value="@Model[i].href" hidden />
+                        <input type="text" name="ingredients" value="@Model[i].ingredients" hidden />
+                        <input type="text" name="thumbnail" value="@Model[i].thumbnail" hidden />
+                        <input type="number" name="page" value="@Model[0].page" hidden />
+                        <input type="submit" class="btn-success" value="Add To Favorites" />
+                    </form>
 
-                    <!--<div class="custom-control custom-checkbox">
-                    <input type="checkbox" >
-                    <label class="custom-control-label" for="defaultChecked2">Add to Favorites</label>
+                }
 
-                    Already a favorite? <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked name="Complete" value="true" />-->
-                    @*<input type="checkbox"class="custom-control-input" id="defaultChecked2" checked name="Complete" value="false" hidden />*@
-
-                    <!--</div>-->
-                </td>
+            </td>
 
 
 
-            </tr>
-        </table>
+        </tr>
+    </table>
+}
 
-        @*<p></p><img src="@recipe.thumbnail"/>
-            <p>@recipe.ingredients</p>
+<div class="float-right">
+    @try
+    {
+       
+            if (Model[0].page == 1 || Model[0].page == 0)
+            {
+                <p>Page 1</p>
+                <form action="../SpiceyRecipe/Paginate" method="post">
+                    <input type="text" name="direction" value="+" hidden />
+                    <input type="submit" value="Next Page" />
+                </form>
+            }
+            else
+            {
+                <form action="../SpiceyRecipe/Paginate" method="post">
+                    <input type="text" name="direction" value="-" hidden />
+                    <input type="submit" value="Previous Page" />
+                </form>
+                <p>Page @Model[0].page</p>
+                <form action="../SpiceyRecipe/Paginate" method="post">
+                    <input type="text" name="direction" value="+" hidden />
+                    <input type="submit" value="Next Page" />
+                </form>
+            }
 
-            <a href="../SpiceyRecipe/AddToFavorites" type="submit" class="buton">Add To Favorites</a>*@
+        }
+    catch
+    {
 
     }
+</div>
 
-    @*</form>*@
+
