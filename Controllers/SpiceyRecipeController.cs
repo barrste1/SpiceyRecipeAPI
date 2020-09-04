@@ -25,6 +25,10 @@ namespace SpiceyRecipeAPI.Controllers
 
         public IActionResult Index(string input,int searchPage)
         {
+            if (searchPage == 0)
+            {
+                searchPage = 1;
+            }
             //Sets up session info for search 
             string inputJSON = JsonSerializer.Serialize(input);
             HttpContext.Session.SetString("SearchInput", inputJSON);
@@ -194,10 +198,13 @@ namespace SpiceyRecipeAPI.Controllers
         }
 
         //takes in a direction and pages right(char is equal to +) or left (char is equal to -)
-        public IActionResult Paginate(char direction)
+        public IActionResult Paginate(Pagination pagination)
         {
             //Recipe Puppy API search results start on page 1, so page will be initialized to 1
-            int page = 1;
+            if (pagination.page == 0)
+            {
+                pagination.page = 1;
+            }
             string originalSearchText = "";
 
             #region Obtain Search string From session
@@ -241,11 +248,7 @@ namespace SpiceyRecipeAPI.Controllers
                 }
                 else if (endpoint.StartsWith("p="))
                 {   //substring p= takes up the first 2 characters of this endpoint area
-                    page = int.Parse(endpoint.Substring(2));
-                }
-                else
-                {
-                    page = 2;
+                    pagination.page = int.Parse(endpoint.Substring(2));
                 }
 
             }
@@ -253,40 +256,47 @@ namespace SpiceyRecipeAPI.Controllers
 
             #region Page Modification
             //+ advances page (from next page) and - value come from previous page 
-            if (direction == '+')
+            if (pagination.direction == '+')
             {
                 try
                 {
                     if (endpoints[1].StartsWith("p="))
                     {
-                        output += "&p=" + (page + 1);
+                        pagination.page++;
+                        output += "&p=" + pagination.page;
                     }
                     else if (endpoints[2].StartsWith("p="))
                     {
-                        output += "&p=" + (page + 1); 
+                        pagination.page++;
+                        output += "&p=" + (pagination.page); 
                     }
 
                 }
                 catch
                 {
+                    pagination.page++;
                     output += "&p=2";
                 };
             }
-            else if (direction == '-')
+            else if (pagination.direction == '-')
             {
-                if (page == 1 || page == 0)
+
+
+
+                if (pagination.page == 1 || pagination.page == 0)
                 {
 
                 }
                 else
                 {
-                    output += "&p=" + (page - 1);
+                    pagination.page--;
+                    output += "&p=" + pagination.page;
                 }
             }
             #endregion
 
 
-            return RedirectToAction("Index", new { input = output , searchPage = page});
+            return RedirectToAction("Index", new { input = output , searchPage = pagination.page});
         }
 
     }
